@@ -16,6 +16,7 @@ class Joueur() : # classe pour créer le vaisseau du joueur
 
 
 
+
 class Balle():
     def __init__(self,joueur,hauteur=500,image=pygame.image.load("fichiers/documents pour eleves/balle.png"),etat="chargee"):
         self.joueur=joueur
@@ -23,10 +24,15 @@ class Balle():
         self.hauteur=hauteur
         self.image=image
         self.etat=etat
-        image.set_alpha(0)
+        self.image.set_alpha(0)
 
     def bouger(self):
-        self.depart=self.joueur.position+18
-
-    def tirer(self):
-        pass
+        if self.etat=="chargee":
+            self.depart=self.joueur.position+18
+        else:
+            self.hauteur-=1
+            self.image.set_alpha(255)
+            if self.hauteur<0:
+                self.etat="chargee"
+                self.hauteur=500
+                self.image.set_alpha(0)

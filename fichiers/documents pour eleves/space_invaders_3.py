@@ -16,6 +16,11 @@ player = space.Joueur()
 # creation de la balle
 tir = space.Balle(player)
 tir.etat = "chargee"
+# creation des ennemis
+listeEnnemis = []
+for indice in range(space.Ennemi.NbEnnemis):
+    vaisseau = space.Ennemi()
+    listeEnnemis.append(vaisseau)
 
 ### BOUCLE DE JEU  ###
 running = True # variable pour laisser la fenêtre ouverte
@@ -37,7 +42,6 @@ while running : # boucle infinie pour laisser la fenêtre ouverte
             if event.key == pygame.K_RIGHT : # si la touche est la fleche droite
                 player.sens = "droite" # on déplace le vaisseau de 1 pixel sur la gauche
             if event.key == pygame.K_SPACE : # espace pour tirer
-                player.tirer()
                 tir.etat = "tiree"
         if event.type == pygame.KEYUP:
             player.sens=0
@@ -50,5 +54,8 @@ while running : # boucle infinie pour laisser la fenêtre ouverte
     # dessins des objets
     screen.blit(tir.image,[tir.depart,tir.hauteur]) # appel de la fonction qui dessine le vaisseau du joueur        
     screen.blit(player.image,[player.position,500]) # appel de la fonction qui dessine le vaisseau du joueur
-    
+    # les ennemis
+    for extra in listeEnnemis:
+        extra.avancer()
+        screen.blit(extra.image,[extra.depart, extra.hauteur]) # appel de la fonction qui dessine le vaisseau du joueur
     pygame.display.update() # pour ajouter tout changement à l'écran

@@ -21,6 +21,7 @@ listeEnnemis = []
 for indice in range(space.Ennemi.NbEnnemis):
     vaisseau = space.Ennemi()
     listeEnnemis.append(vaisseau)
+print(listeEnnemis)
 
 ### BOUCLE DE JEU  ###
 running = True # variable pour laisser la fenêtre ouverte
@@ -48,6 +49,11 @@ while running : # boucle infinie pour laisser la fenêtre ouverte
             print("Plus de touche appuyée")
 
     ### Actualisation de la scene ###
+    # Gestions des collisions
+    for ennemi in listeEnnemis:
+        if tir.toucher(ennemi):
+            ennemi.disparaitre()
+            player.marquer()
     # deplacement des objets
     player.deplacer()
     tir.bouger()
@@ -56,6 +62,7 @@ while running : # boucle infinie pour laisser la fenêtre ouverte
     screen.blit(player.image,[player.position,500]) # appel de la fonction qui dessine le vaisseau du joueur
     # les ennemis
     for extra in listeEnnemis:
+        print(extra)
         extra.avancer()
         screen.blit(extra.image,[extra.depart, extra.hauteur]) # appel de la fonction qui dessine le vaisseau du joueur
     pygame.display.update() # pour ajouter tout changement à l'écran

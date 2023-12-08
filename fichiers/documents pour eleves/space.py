@@ -97,6 +97,14 @@ class Ennemi:
         self.hauteur+=self.vitesse
 
 class Fond():
-    layers=[{"image":pygame.image.load("fichiers/fond/layer_1"),"vitesse":1}]
-    layer2=pygame.image.load("fichiers/fond/layer_2")
-    layer3=pygame.image.load("fichiers/fond/layer_3")
+    layers=[{"image":pygame.image.load("fichiers/fond/layer_1"),"vitesse":1},
+            {"image":pygame.image.load("fichiers/fond/layer_2"),"vitesse":2},
+            {"image":pygame.image.load("fichiers/fond/layer_3"),"vitesse":3}]
+    
+    def __init__(self,num,layers=layers):
+        image=layers[num]["image"]
+        self.image=pygame.transform.rotozoom(image,0,2)
+        self.vitesse=layers[num]["vitesse"]
+    
+    def avancer(self):
+        pass

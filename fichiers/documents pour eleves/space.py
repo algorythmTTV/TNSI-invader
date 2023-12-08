@@ -63,7 +63,7 @@ class Balle:
                 self.image.set_alpha(0)
     
     def toucher(self, ennemi):
-        if ennemi.depart in [i for i in range(int(self.depart - 258), int(self.depart))] and self.etat == "tiree" and self.hauteur in [i for i in range(int(ennemi.hauteur), int(ennemi.hauteur + 50))]:
+        if ennemi.depart in [i for i in range(int(self.depart - 128), int(self.depart))] and self.etat == "tiree" and self.hauteur in [i for i in range(int(ennemi.hauteur), int(ennemi.hauteur + 50))]:
             self.etat = "chargee"
             print("touché")
             self.hauteur = self.joueur.hauteur
@@ -88,9 +88,15 @@ class Ennemi:
                  types=types):
         self.depart=r.randint(10,1846)
         self.type=types[r.randint(1,2)]
-        self.image=pygame.image.load(self.type[1])
+        image=pygame.transform.scale(pygame.image.load(self.type[1]),(128,128))
+        self.image=image
         self.vitesse=self.type[2]
         self.hauteur=r.randint(-500,0)
 
     def avancer(self):
         self.hauteur+=self.vitesse
+
+class Fond():
+    layers=[{"image":pygame.image.load("fichiers/fond/layer_1"),"vitesse":1}]
+    layer2=pygame.image.load("fichiers/fond/layer_2")
+    layer3=pygame.image.load("fichiers/fond/layer_3")

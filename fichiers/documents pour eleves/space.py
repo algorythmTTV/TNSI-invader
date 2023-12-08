@@ -62,11 +62,11 @@ class Balle:
                 self.hauteur=self.joueur.hauteur
                 self.image.set_alpha(0)
     
-    def toucher(self,ennemi):
-        if ennemi.depart in [i for i in range(int(self.depart-258),int(self.depart))] and self.etat=="tiree" and self.hauteur in [i for i in range(int(ennemi.hauteur),int(ennemi.hauteur+50))]:
-            self.etat="chargee"
+    def toucher(self, ennemi):
+        if ennemi.depart in [i for i in range(int(self.depart - 258), int(self.depart))] and self.etat == "tiree" and self.hauteur in [i for i in range(int(ennemi.hauteur), int(ennemi.hauteur + 50))]:
+            self.etat = "chargee"
             print("touché")
-            self.hauteur=self.joueur.hauteur
+            self.hauteur = self.joueur.hauteur
             self.image.set_alpha(0)
             return True
         return False

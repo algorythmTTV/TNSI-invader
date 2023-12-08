@@ -52,7 +52,7 @@ while running : # boucle infinie pour laisser la fenêtre ouverte
     # Gestions des collisions
     for ennemi in listeEnnemis:
         if tir.toucher(ennemi):
-            ennemi.disparaitre()
+            del ennemi
             player.marquer()
     # deplacement des objets
     player.deplacer()
@@ -62,7 +62,7 @@ while running : # boucle infinie pour laisser la fenêtre ouverte
     screen.blit(player.image,[player.position,500]) # appel de la fonction qui dessine le vaisseau du joueur
     # les ennemis
     for extra in listeEnnemis:
-        print(extra)
+        print(extra.depart)
         extra.avancer()
         screen.blit(extra.image,[extra.depart, extra.hauteur]) # appel de la fonction qui dessine le vaisseau du joueur
     pygame.display.update() # pour ajouter tout changement à l'écran

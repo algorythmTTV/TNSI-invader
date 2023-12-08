@@ -2,7 +2,7 @@ import pygame  # necessaire pour charger les images et les sons
 import random as r
 
 
-class Joueur() : # classe pour créer le vaisseau du joueur
+class Joueur: # classe pour créer le vaisseau du joueur
     def __init__(self,
                  sens=0,
                  image=pygame.image.load("fichiers/documents pour eleves/vaisseau.png"),
@@ -27,7 +27,7 @@ class Joueur() : # classe pour créer le vaisseau du joueur
 
 
 
-class Balle():
+class Balle:
     def __init__(self,
                  joueur,
                  hauteur=500,
@@ -68,14 +68,12 @@ class Ennemi:
                  2]}
 
     def __init__(self,
-                 depart=r.randint(10,726),
-                 type=types[r.randint(1,2)],
-                 hauteur=64):
-        self.depart=depart
-        self.type=type[0]
-        self.image=pygame.image.load(type[1])
-        self.vitesse=type[2]
-        self.hauteur=hauteur
+                 types=types):
+        self.depart=r.randint(10,726)
+        self.type=types[r.randint(1,2)]
+        self.image=pygame.image.load(self.type[1])
+        self.vitesse=self.type[2]
+        self.hauteur=r.randint(-100,64)
 
     def avancer(self):
         self.hauteur+=self.vitesse

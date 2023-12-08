@@ -7,22 +7,31 @@ class Joueur: # classe pour créer le vaisseau du joueur
                  sens=0,
                  image=pygame.image.load("fichiers/documents pour eleves/vaisseau.png"),
                  position=400,
-                 vitesse=1,
-                 score=0):
+                 vitesse=0.5,
+                 score=0,
+                 hauteur=500,
+                 vie=3):
         self.sens=sens
         self.image=image
         self.position=position
         self.vitesse=vitesse
         self.score=score
+        self.hauteur=hauteur
+        self.vie=vie
 
     def deplacer(self):
         if self.sens=="gauche" and self.position>0:
             self.position-=self.vitesse
         elif self.sens=="droite" and self.position<736:
             self.position+=self.vitesse
+        elif self.sens=="haut" and self.hauteur>430:
+            self.hauteur-=self.vitesse
+        elif self.sens=="bas" and self.hauteur<510:
+            self.hauteur+=self.vitesse
     
     def marquer(self):
-        pass
+        self.score+=1
+        print(self.score)
 
 
 
@@ -30,12 +39,11 @@ class Joueur: # classe pour créer le vaisseau du joueur
 class Balle:
     def __init__(self,
                  joueur,
-                 hauteur=500,
                  image=pygame.image.load("fichiers/documents pour eleves/balle.png"),
                  etat="chargee"):
         self.joueur=joueur
         self.depart=self.joueur.position+19
-        self.hauteur=hauteur
+        self.hauteur=joueur.hauteur
         self.image=image
         self.etat=etat
         self.image.set_alpha(0)
@@ -43,29 +51,37 @@ class Balle:
     def bouger(self):
         if self.etat=="chargee":
             self.depart=self.joueur.position+18
+            self.hauteur=self.joueur.hauteur
         else:
             self.hauteur-=1
             self.image.set_alpha(255)
+            self.etat="tiree"
             if self.hauteur<0:
                 self.etat="chargee"
-                self.hauteur=500
+                self.hauteur=self.joueur.hauteur
                 self.image.set_alpha(0)
     
     def toucher(self,ennemi):
-        if self.hauteur==ennemi.hauteur:
+        if ennemi.depart in [i for i in range(int(self.depart-64),int(self.depart))] and self.etat=="tiree" and self.hauteur in [i for i in range(int(ennemi.hauteur),int(ennemi.hauteur+50))]:
+            self.etat="chargee"
+            print("touché")
+            self.hauteur=self.joueur.hauteur
+            self.image.set_alpha(0)
             return True
         return False
 
 
 
 class Ennemi:
-    NbEnnemis=15
+    vague=0
+    vagues=[1,2,4,8,15]
+    NbEnnemis=vagues[vague]
     types={1:["invader1",
               "fichiers/documents pour eleves/invader1.png",
-              1],
+              0.1],
               2:["invader2",
                  "fichiers/documents pour eleves/invader2.png",
-                 2]}
+                 0.2]}
 
     def __init__(self,
                  types=types):
@@ -77,6 +93,3 @@ class Ennemi:
 
     def avancer(self):
         self.hauteur+=self.vitesse
-
-    def disparaitre(self):
-        pass

@@ -21,7 +21,6 @@ listeEnnemis = []
 for indice in range(space.Ennemi.NbEnnemis):
     vaisseau = space.Ennemi()
     listeEnnemis.append(vaisseau)
-print(listeEnnemis)
 
 ### BOUCLE DE JEU  ###
 running = True # variable pour laisser la fenêtre ouverte
@@ -42,27 +41,45 @@ while running : # boucle infinie pour laisser la fenêtre ouverte
                 player.sens = "gauche" # on déplace le vaisseau de 1 pixel sur la gauche
             if event.key == pygame.K_RIGHT : # si la touche est la fleche droite
                 player.sens = "droite" # on déplace le vaisseau de 1 pixel sur la gauche
+            if event.key == pygame.K_UP:
+                player.sens="haut"
+            if event.key == pygame.K_DOWN:
+                player.sens="bas"
             if event.key == pygame.K_SPACE : # espace pour tirer
                 tir.etat = "tiree"
         if event.type == pygame.KEYUP:
             player.sens=0
-            print("Plus de touche appuyée")
 
     ### Actualisation de la scene ###
     # Gestions des collisions
-    for ennemi in listeEnnemis:
-        if tir.toucher(ennemi):
-            del ennemi
-            player.marquer()
+    if len(listeEnnemis)>0:
+        for ennemi in listeEnnemis:
+            if tir.toucher(ennemi):
+                listeEnnemis.remove(ennemi)
+                player.marquer()
+            elif ennemi.hauteur>600:
+                listeEnnemis.remove(ennemi)
+                player.vie-=1
+                if player.vie<=0:
+                    print("Perdu!")
+                    running=False
+                    sys.exit()
+    else:
+        space.Ennemi.vague+=1
+        space.Ennemi.NbEnnemis=space.Ennemi.vagues[space.Ennemi.vague]
+        print("vague:",space.Ennemi.vague+1)
+        for indice in range(space.Ennemi.NbEnnemis):
+            vaisseau = space.Ennemi()
+            listeEnnemis.append(vaisseau)
     # deplacement des objets
     player.deplacer()
     tir.bouger()
     # dessins des objets
     screen.blit(tir.image,[tir.depart,tir.hauteur]) # appel de la fonction qui dessine le vaisseau du joueur        
-    screen.blit(player.image,[player.position,500]) # appel de la fonction qui dessine le vaisseau du joueur
+    screen.blit(player.image,[player.position,player.hauteur]) # appel de la fonction qui dessine le vaisseau du joueur
+    screen.blit(pygame.image.load("fichiers/documents pour eleves/coeur.png"),[0,0])
     # les ennemis
     for extra in listeEnnemis:
-        print(extra.depart)
         extra.avancer()
-        screen.blit(extra.image,[extra.depart, extra.hauteur]) # appel de la fonction qui dessine le vaisseau du joueur
+        screen.blit(extra.image,[extra.depart, round(extra.hauteur)]) # appel de la fonction qui dessine le vaisseau du joueur
     pygame.display.update() # pour ajouter tout changement à l'écran

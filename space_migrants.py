@@ -78,7 +78,7 @@ while running:
                 ennemi.explosion()
             elif ennemi.mort:
                 ennemi.explosion()
-                if ennemi.alpha==0:
+                if ennemi.alpha<=0:
                     listeEnnemis.remove(ennemi)
                     player.marquer()
             elif ennemi.hauteur > 1080:
@@ -104,6 +104,8 @@ while running:
         screen.blit(f.image,[f.largeur,f.hauteur])
     player.deplacer()
     balle.bouger()
+
+    
 
     screen.blit(balle.image, [balle.depart, balle.hauteur])
     screen.blit(player.image, [player.position, player.hauteur])

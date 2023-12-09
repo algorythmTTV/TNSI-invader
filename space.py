@@ -12,7 +12,7 @@ class Joueur:
                  hauteur=870,
                  vie=3):
         self.sens = sens
-        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/Ship_1_A_Small.png").convert_alpha(),(64,64))
+        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/player/Ship_1_A_Small.png").convert_alpha(),(64,64))
         self.position = position
         self.vitesse = vitesse
         self.score = score
@@ -42,7 +42,7 @@ class Balle:
         self.joueur = joueur
         self.depart = self.joueur.position + 19
         self.hauteur = joueur.hauteur
-        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/Missile_A_Small.png").convert_alpha(),(32,32))
+        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/player/Missile_A_Small.png").convert_alpha(),(32,32))
         self.etat = etat
         self.image.set_alpha(0)
 
@@ -81,10 +81,10 @@ class Ennemi:
     vagues=[i for i in range(100)]
     NbEnnemis=vagues[vague]
     types={1:["invader1",
-              "fichiers/images/Enemy_1_A_Small.png",
+              "fichiers/images/enemies/Enemy_1_A_Small.png",
               1.5],
               2:["invader2",
-                 "fichiers/images/Enemy_2_A_Small.png",
+                 "fichiers/images/enemies/Enemy_2_A_Small.png",
                  2.2]}
     def __init__(self,types=types,mort=False):
         self.depart=r.randint(610,1246)
@@ -130,3 +130,10 @@ class Fond:
             self.hauteur=-10440
         else:
             self.hauteur += self.vitesse
+
+
+
+
+class Obstacle:
+    def __init__():
+        pass

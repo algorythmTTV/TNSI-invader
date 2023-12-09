@@ -10,7 +10,7 @@ class Joueur:
                  vitesse=4,
                  score=0,
                  hauteur=870,
-                 vie=3):
+                 vie=1):
         self.sens = sens
         self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/player/Ship_1_A_Small.png").convert_alpha(),(64,64))
         self.position = position
@@ -102,7 +102,7 @@ class Ennemi:
     def explosion(self):
         if self.mort:
             self.vitesse=0
-            self.alpha-=10
+            self.alpha-=30
             print(self.alpha)
             self.image.set_alpha(self.alpha)
 
@@ -153,6 +153,21 @@ class Nombre:
 
     
 
-class Obstacle:
-    def __init__():
-        pass
+""" class Obstacle:
+    image_stable=pygame.image.load("fichiers/images/obstacles/asteroide_01.png")
+    
+    
+    def __init__(self,image_stable=image_stable):
+        self.image_stable=pygame.transform.rotozoom(image_stable.convert_alpha(),r.randint(0,360),0)
+        self.hauteur=r.randint(-300,-100)
+        self.depart=r.randint(610,1214)
+        self.vitesse=r.randint(3,5)
+    
+    def avancer(self):
+        self.hauteur+=self.vitesse
+
+    def collision(self,joueur):
+        if (joueur.position - 98 <= self.depart <= joueur.position + joueur.image.get_width()
+            and joueur.hauteur <= self.hauteur <= joueur.hauteur + joueur.image.get_height()
+        ):
+            joueur.vie=0 """

@@ -10,6 +10,7 @@ pygame.display.set_caption("Space Invaders")
 
 player = space.Joueur()
 score_precedent=player.score
+vg_precedente=0
 sc=space.Nombre(player.score,50)
 balle = space.Balle(player)
 
@@ -32,15 +33,20 @@ for indice in range(space.Ennemi.NbEnnemis):
     vaisseau = space.Ennemi()
     listeEnnemis.append(vaisseau)
 
+# listeObstacles=[]
 
 fond_menu=pygame.image.load("fichiers/fond/fond.png").convert_alpha()
 screen.blit(fond_menu, [0,0])
 pygame.display.update()
+son=pygame.mixer.Sound("fichiers/sons/start.wav")
+son.play()
 commence = False
 while not commence:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             commence = True
+            son=pygame.mixer.Sound("fichiers/sons/shoot.wav")
+            son.play()
 screen.fill((0, 0, 0))
 
 running = True
@@ -95,7 +101,6 @@ while running:
         vague_passee.play()
         space.Ennemi.vague += 1
         space.Ennemi.NbEnnemis = space.Ennemi.vagues[space.Ennemi.vague]
-        print("vague:", space.Ennemi.vague + 1)
         for indice in range(space.Ennemi.NbEnnemis):
             vaisseau = space.Ennemi()
             listeEnnemis.append(vaisseau)
@@ -105,6 +110,14 @@ while running:
         screen.blit(f.image,[f.largeur,f.hauteur])
     player.deplacer()
     balle.bouger()
+
+    if vg_precedente!=space.Ennemi.vague:
+        vg=space.Nombre(space.Ennemi.vague,50)
+        for i in range(len(vg.images)):
+            screen.blit(vg.images[i],[i*50,1030])
+    else:
+        for i in range(vg.images):
+            screen.blit(vg.images[i],[i*50,1030])
 
     if score_precedent!=player.score:
         sc=space.Nombre(player.score,50)
@@ -120,10 +133,34 @@ while running:
     for extra in listeEnnemis:
         extra.avancer()
         screen.blit(extra.image, [extra.depart, round(extra.hauteur)])
+    
+    # for i in range((space.Ennemi.vague+1)):
+    #     obst=space.Obstacle()
+    #     listeObstacles.append(obst)
+    # 
+    # for obstacle in listeObstacles:
+    #     obstacle.avancer()
+    #     if obstacle.hauteur>=1080:
+    #         listeObstacles.remove(obstacle)
+    #     else:
+    #         obstacle.collision(player)
+    #         screen.blit(obstacle.image_stable, [obstacle.depart, obstacle.hauteur])
+
     score_precedent=player.score
     pygame.display.update()
 
+
+pygame.mixer.music.stop()
+son=pygame.mixer.Sound("fichiers/sons/game_over.wav")
+son.set_volume(0.2)
+son.play()
+son=pygame.mixer.Sound("fichiers/sons/dead.wav")
+son.play()
 fin=pygame.image.load("fichiers/fond/fin.png").convert_alpha()
+for i in range(256):
+    fin.set_alpha(i)
+    screen.blit(fin, [0,0])
+    pygame.display.update()
 screen.blit(fin, [0,0])
 pygame.display.update()
 exit = False

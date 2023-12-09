@@ -10,6 +10,11 @@ pygame.display.set_caption("Space Invaders")
 player = space.Joueur()
 balle = space.Balle(player)
 
+listeFond=[]
+for i in range(3):
+    fond=space.Fond(i)
+    listeFond.append(fond)
+
 listeEnnemis = []
 for indice in range(space.Ennemi.NbEnnemis):
     vaisseau = space.Ennemi()
@@ -68,6 +73,9 @@ while running:
             vaisseau = space.Ennemi()
             listeEnnemis.append(vaisseau)
 
+    for f in listeFond:
+        f.avancer()
+        screen.blit(f.image,[f.largeur,f.hauteur])
     player.deplacer()
     balle.bouger()
 

@@ -63,12 +63,17 @@ class Balle:
                 self.image.set_alpha(0)
     
     def toucher(self, ennemi):
-        if ennemi.depart in [i for i in range(int(self.depart - 128), int(self.depart))] and self.etat == "tiree" and self.hauteur in [i for i in range(int(ennemi.hauteur), int(ennemi.hauteur + 50))]:
+        if (
+            self.etat == "tiree"
+            and ennemi.depart <= self.depart <= ennemi.depart + ennemi.image.get_width()
+            and ennemi.hauteur <= self.hauteur <= ennemi.hauteur + ennemi.image.get_height()
+        ):
             self.etat = "chargee"
             print("touché")
             self.hauteur = self.joueur.hauteur
             self.image.set_alpha(0)
             return True
+
         return False
 
 
@@ -88,7 +93,7 @@ class Ennemi:
                  types=types):
         self.depart=r.randint(10,1846)
         self.type=types[r.randint(1,2)]
-        image=pygame.transform.scale(pygame.image.load(self.type[1]),(128,128))
+        image=pygame.image.load(self.type[1])
         self.image=image
         self.vitesse=self.type[2]
         self.hauteur=r.randint(-500,0)
@@ -96,15 +101,17 @@ class Ennemi:
     def avancer(self):
         self.hauteur+=self.vitesse
 
-class Fond():
-    layers=[{"image":pygame.image.load("fichiers/fond/layer_1"),"vitesse":1},
-            {"image":pygame.image.load("fichiers/fond/layer_2"),"vitesse":2},
-            {"image":pygame.image.load("fichiers/fond/layer_3"),"vitesse":3}]
+class Fond:
+    layers=[{"image":pygame.image.load("fichiers/fond/layer_1.png"),"vitesse":1},
+            {"image":pygame.image.load("fichiers/fond/layer_2.png"),"vitesse":2},
+            {"image":pygame.image.load("fichiers/fond/layer_3.png"),"vitesse":3}]
     
-    def __init__(self,num,layers=layers):
+    def __init__(self,num,layers=layers,hauteur=0,largeur=180):
         image=layers[num]["image"]
         self.image=pygame.transform.rotozoom(image,0,2)
         self.vitesse=layers[num]["vitesse"]
+        self.hauteur=hauteur
+        self.largeur=largeur
     
     def avancer(self):
-        pass
+        self.hauteur+=self.vitesse

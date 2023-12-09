@@ -1,28 +1,50 @@
-import pygame  # necessaire pour charger les images et les sons
+import pygame
 import random as r
 
 
-class Joueur: # classe pour créer le vaisseau du joueur
+class Menu:
+    layers = [
+        {"image": "fichiers/menu/layer_1.png", "vitesse": 1},
+        {"image": "fichiers/menu/layer_2.png", "vitesse": 2},
+        {"image": "fichiers/menu/layer_3.png", "vitesse": 3}
+    ]
+
+    def __init__(self, num, hauteur=-2160, largeur=0):
+        layer_info = self.layers[num]
+        image_path = layer_info["image"]
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.vitesse = layer_info["vitesse"]
+        self.hauteur = hauteur
+        self.largeur = largeur
+
+    def avancer(self):
+        if self.hauteur==0:
+            self.hauteur=-2160
+        else:
+            self.hauteur += self.vitesse
+
+
+
+class Joueur:
     def __init__(self,
                  sens=0,
-                 image=pygame.image.load("fichiers/images/Ship_1_A_Small.png"),
-                 position=510,
+                 position=896,
                  vitesse=4,
                  score=0,
                  hauteur=870,
                  vie=3):
-        self.sens=sens
-        self.image=image
-        self.position=position
-        self.vitesse=vitesse
-        self.score=score
-        self.hauteur=hauteur
-        self.vie=vie
+        self.sens = sens
+        self.image = pygame.image.load("fichiers/images/Ship_1_A_Small.png").convert_alpha()
+        self.position = position
+        self.vitesse = vitesse
+        self.score = score
+        self.hauteur = hauteur
+        self.vie = vie
 
     def deplacer(self):
-        if self.sens=="gauche" and self.position>0:
+        if self.sens=="gauche" and self.position>610:
             self.position-=self.vitesse
-        elif self.sens=="droite" and self.position<1856:
+        elif self.sens=="droite" and self.position<1182:
             self.position+=self.vitesse
         elif self.sens=="haut" and self.hauteur>840:
             self.hauteur-=self.vitesse
@@ -37,16 +59,13 @@ class Joueur: # classe pour créer le vaisseau du joueur
 
 
 class Balle:
-    max=3
-    def __init__(self,
-                 joueur,
-                 image=pygame.image.load("fichiers/images/Missile_A_Small.png"),
-                 etat="chargee"):
-        self.joueur=joueur
-        self.depart=self.joueur.position+19
-        self.hauteur=joueur.hauteur
-        self.image=image
-        self.etat=etat
+    max = 3
+    def __init__(self, joueur, etat="chargee"):
+        self.joueur = joueur
+        self.depart = self.joueur.position + 19
+        self.hauteur = joueur.hauteur
+        self.image = pygame.image.load("fichiers/images/Missile_A_Small.png").convert_alpha()
+        self.etat = etat
         self.image.set_alpha(0)
 
     def bouger(self):
@@ -91,27 +110,35 @@ class Ennemi:
 
     def __init__(self,
                  types=types):
-        self.depart=r.randint(10,1846)
+        self.depart=r.randint(610,1182)
         self.type=types[r.randint(1,2)]
-        image=pygame.image.load(self.type[1])
+        image=pygame.image.load(self.type[1]).convert_alpha()
         self.image=image
         self.vitesse=self.type[2]
-        self.hauteur=r.randint(-500,0)
+        self.hauteur=r.randint(-500,-100)
 
     def avancer(self):
         self.hauteur+=self.vitesse
+
 
 class Fond:
-    layers=[{"image":pygame.image.load("fichiers/fond/layer_1.png"),"vitesse":1},
-            {"image":pygame.image.load("fichiers/fond/layer_2.png"),"vitesse":2},
-            {"image":pygame.image.load("fichiers/fond/layer_3.png"),"vitesse":3}]
-    
-    def __init__(self,num,layers=layers,hauteur=0,largeur=180):
-        image=layers[num]["image"]
-        self.image=pygame.transform.rotozoom(image,0,2)
-        self.vitesse=layers[num]["vitesse"]
-        self.hauteur=hauteur
-        self.largeur=largeur
-    
+    layers = [
+        {"image": "fichiers/fond/layer_1.png", "vitesse": 1},
+        {"image": "fichiers/fond/layer_2.png", "vitesse": 2},
+        {"image": "fichiers/fond/layer_3.png", "vitesse": 3}
+    ]
+
+    def __init__(self, num, hauteur=-10440, largeur=600):
+        layer_info = self.layers[num]
+        image_path = layer_info["image"]
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.image = pygame.transform.rotozoom(self.image, 0, 2)
+        self.vitesse = layer_info["vitesse"]
+        self.hauteur = hauteur
+        self.largeur = largeur
+
     def avancer(self):
-        self.hauteur+=self.vitesse
+        if self.hauteur==0:
+            self.hauteur=-10440
+        else:
+            self.hauteur += self.vitesse

@@ -10,6 +10,11 @@ pygame.display.set_caption("Space Invaders")
 player = space.Joueur()
 balle = space.Balle(player)
 
+listeMenu=[]
+for i in range(3):
+    fond_menu=space.Menu(i)
+    listeMenu.append(fond_menu)
+
 listeFond=[]
 for i in range(3):
     fond=space.Fond(i)
@@ -22,6 +27,9 @@ for indice in range(space.Ennemi.NbEnnemis):
 
 commence = False
 while commence == False:
+    for f_menu in listeMenu:
+        f_menu.avancer()
+        screen.blit(f_menu.image,[f_menu.largeur,f_menu.hauteur])
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             screen.fill((0, 0, 0))

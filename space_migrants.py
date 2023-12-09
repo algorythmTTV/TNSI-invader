@@ -10,53 +10,49 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Space Invaders")
 
 player = space.Joueur()
-score_precedent=player.score
-vg_precedente=0
-sc=space.Nombre(player.score,50)
+score_precedent = player.score
+vg_precedente = 0
+sc = space.Nombre(player.score, 50)
 balle = space.Balle(player)
 
-with open("fichiers/sauvegardes/save.json","r") as fichier:
-    donnees=json.load(fichier)
+with open("fichiers/sauvegardes/save.json", "r") as fichier:
+    donnees = json.load(fichier)
     print(donnees)
-sc_save_last=space.Nombre(donnees["score"],50)
-sc_save_best=space.Nombre(donnees["best"],50)
+sc_save_last = space.Nombre(donnees["score"], 50)
+sc_save_best = space.Nombre(donnees["best"], 50)
 
-listeTextes=[pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/score.png").convert_alpha(),(200,200)),
-             pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/vague.png").convert_alpha(),(200,200)),
-             pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/last.png").convert_alpha(),(200,200)),
-             pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/best.png").convert_alpha(),(200,200))]
+listeTextes = [
+    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/score.png").convert_alpha(), (200, 200)),
+    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/vague.png").convert_alpha(), (200, 200)),
+    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/last.png").convert_alpha(), (200, 200)),
+    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/best.png").convert_alpha(), (200, 200))
+]
 
-listeMusiques=["fichiers/musique/musique_1.mp3",
-               "fichiers/musique/musique_2.mp3",
-               "fichiers/musique/musique_3.mp3",
-               "fichiers/musique/musique_4.mp3",
-               "fichiers/musique/musique_5.mp3"]
+listeMusiques = [
+    "fichiers/musique/musique_1.mp3",
+    "fichiers/musique/musique_2.mp3",
+    "fichiers/musique/musique_3.mp3",
+    "fichiers/musique/musique_4.mp3",
+    "fichiers/musique/musique_5.mp3"
+]
 
-vague_passee=pygame.mixer.Sound("fichiers/sons/vague_passee.wav")
+vague_passee = pygame.mixer.Sound("fichiers/sons/vague_passee.wav")
 
-listeFond=[]
-for i in range(3):
-    fond=space.Fond(i)
-    listeFond.append(fond)
+listeFond = [space.Fond(i) for i in range(3)]
 
-listeEnnemis = []
-for indice in range(space.Ennemi.NbEnnemis):
-    vaisseau = space.Ennemi()
-    listeEnnemis.append(vaisseau)
+listeEnnemis = [space.Ennemi() for _ in range(space.Ennemi.NbEnnemis)]
 
-# listeObstacles=[]
-
-fond_menu=pygame.image.load("fichiers/fond/fond.png").convert_alpha()
-screen.blit(fond_menu, [0,0])
+fond_menu = pygame.image.load("fichiers/fond/fond.png").convert_alpha()
+screen.blit(fond_menu, [0, 0])
 pygame.display.update()
-son=pygame.mixer.Sound("fichiers/sons/start.wav")
+son = pygame.mixer.Sound("fichiers/sons/start.wav")
 son.play()
 commence = False
 while not commence:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             commence = True
-            son=pygame.mixer.Sound("fichiers/sons/shoot.wav")
+            son = pygame.mixer.Sound("fichiers/sons/shoot.wav")
             son.play()
 screen.fill((0, 0, 0))
 
@@ -64,7 +60,7 @@ running = True
 
 while running:
     if not pygame.mixer.music.get_busy():
-        musique=r.choice(listeMusiques)
+        musique = r.choice(listeMusiques)
         pygame.mixer.music.load(musique)
         pygame.mixer.music.play()
         pygame.mixer.music.set_volume(0.3)
@@ -92,61 +88,59 @@ while running:
     if len(listeEnnemis) > 0:
         for ennemi in listeEnnemis:
             if balle.toucher(ennemi):
-                son=pygame.mixer.Sound("fichiers/sons/explosion.wav")
+                son = pygame.mixer.Sound("fichiers/sons/explosion.wav")
                 son.play()
-                ennemi.mort=True
+                ennemi.mort = True
                 ennemi.explosion()
             elif ennemi.mort:
                 ennemi.explosion()
-                if ennemi.alpha<=0:
+                if ennemi.alpha <= 0:
                     listeEnnemis.remove(ennemi)
                     player.marquer()
             elif ennemi.hauteur > 1080:
                 listeEnnemis.remove(ennemi)
                 player.vie -= 1
                 if player.vie <= 0:
-                    running=False
+                    running = False
         if balle.hauteur < 0:
             balle.hauteur = player.hauteur
     else:
         vague_passee.play()
         space.Ennemi.vague += 1
         space.Ennemi.NbEnnemis = space.Ennemi.vagues[space.Ennemi.vague]
-        for indice in range(space.Ennemi.NbEnnemis):
-            vaisseau = space.Ennemi()
-            listeEnnemis.append(vaisseau)
+        listeEnnemis.extend([space.Ennemi() for _ in range(space.Ennemi.NbEnnemis)])
 
     for f in listeFond:
         f.avancer()
-        screen.blit(f.image,[f.largeur,f.hauteur])
+        screen.blit(f.image, [f.largeur, f.hauteur])
     player.deplacer()
     balle.bouger()
 
-    screen.blit(listeTextes[1],[0,955])
-    if vg_precedente!=space.Ennemi.vague:
-        vg=space.Nombre(space.Ennemi.vague,50)
+    screen.blit(listeTextes[1], [0, 955])
+    if vg_precedente != space.Ennemi.vague:
+        vg = space.Nombre(space.Ennemi.vague, 50)
         for i in range(len(vg.images)):
-            screen.blit(vg.images[i],[(i+5)*35,1030])
+            screen.blit(vg.images[i], [(i + 5) * 35, 1030])
     else:
         for i in range(vg.images):
-            screen.blit(vg.images[i],[(i+5)*35,1030])
+            screen.blit(vg.images[i], [(i + 5) * 35, 1030])
 
-    screen.blit(listeTextes[0],[0,-75])
-    if score_precedent!=player.score:
-        sc=space.Nombre(player.score,50)
+    screen.blit(listeTextes[0], [0, -75])
+    if score_precedent != player.score:
+        sc = space.Nombre(player.score, 50)
         for i in range(len(sc.images)):
-            screen.blit(sc.images[i],[(i+5)*35,0])
+            screen.blit(sc.images[i], [(i + 5) * 35, 0])
     else:
         for i in range(len(sc.images)):
-            screen.blit(sc.images[i],[(i+5)*35,0])
-    
-    screen.blit(listeTextes[2],[1920-(len(sc_save_last.images)*35)-150,-75])
-    for i in range(len(sc_save_last.images)):
-        screen.blit(sc_save_last.images[i],[(1920-(len(sc_save_last.images)*35)+(i*35)),0])
+            screen.blit(sc.images[i], [(i + 5) * 35, 0])
 
-    screen.blit(listeTextes[3],[1920-(len(sc_save_best.images)*35)-150,955])
+    screen.blit(listeTextes[2], [1920 - (len(sc_save_last.images) * 35) - 150, -75])
+    for i in range(len(sc_save_last.images)):
+        screen.blit(sc_save_last.images[i], [(1920 - (len(sc_save_last.images) * 35) + (i * 35)), 0])
+
+    screen.blit(listeTextes[3], [1920 - (len(sc_save_best.images) * 35) - 150, 955])
     for i in range(len(sc_save_best.images)):
-        screen.blit(sc_save_best.images[i],[(1920-(len(sc_save_best.images)*35)+(i*35)),1030])
+        screen.blit(sc_save_best.images[i], [(1920 - (len(sc_save_best.images) * 35) + (i * 35)), 1030])
 
     screen.blit(balle.image, [balle.depart, balle.hauteur])
     screen.blit(player.image, [player.position, player.hauteur])
@@ -154,43 +148,29 @@ while running:
     for extra in listeEnnemis:
         extra.avancer()
         screen.blit(extra.image, [extra.depart, round(extra.hauteur)])
-    
-    if sc_save_best.nb<player.score:
-        sc_save_best=space.Nombre(player.score,50)
 
-    # for i in range((space.Ennemi.vague+1)):
-    #     obst=space.Obstacle()
-    #     listeObstacles.append(obst)
-    # 
-    # for obstacle in listeObstacles:
-    #     obstacle.avancer()
-    #     if obstacle.hauteur>=1080:
-    #         listeObstacles.remove(obstacle)
-    #     else:
-    #         obstacle.collision(player)
-    #         screen.blit(obstacle.image_stable, [obstacle.depart, obstacle.hauteur])
+    if sc_save_best.nb < player.score:
+        sc_save_best = space.Nombre(player.score, 50)
 
-    score_precedent=player.score
+    score_precedent = player.score
     pygame.display.update()
 
-
-save_last={"score":player.score,"best":sc_save_best.nb}
-with open("fichiers/sauvegardes/save.json","w") as fichier:
-    json.dump(save_last,fichier)
-
+save_last = {"score": player.score, "best": sc_save_best.nb}
+with open("fichiers/sauvegardes/save.json", "w") as fichier:
+    json.dump(save_last, fichier)
 
 pygame.mixer.music.stop()
-son=pygame.mixer.Sound("fichiers/sons/game_over.wav")
+son = pygame.mixer.Sound("fichiers/sons/game_over.wav")
 son.set_volume(0.2)
 son.play()
-son=pygame.mixer.Sound("fichiers/sons/dead.wav")
+son = pygame.mixer.Sound("fichiers/sons/dead.wav")
 son.play()
-fin=pygame.image.load("fichiers/fond/fin.png").convert_alpha()
+fin = pygame.image.load("fichiers/fond/fin.png").convert_alpha()
 for i in range(256):
     fin.set_alpha(i)
-    screen.blit(fin, [0,0])
+    screen.blit(fin, [0, 0])
     pygame.display.update()
-screen.blit(fin, [0,0])
+screen.blit(fin, [0, 0])
 pygame.display.update()
 exit = False
 while not exit:

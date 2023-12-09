@@ -27,14 +27,50 @@ class Joueur:
         print(self.score)
 
 
-class Balle:
-    max = 3
+class Balle_A:
 
     def __init__(self, joueur, etat="chargee"):
         self.joueur = joueur
         self.depart = self.joueur.position + 19
         self.hauteur = joueur.hauteur
         self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/player/Missile_A_Small.png").convert_alpha(), (32, 32))
+        self.etat = etat
+        self.image.set_alpha(0)
+
+    def bouger(self):
+        if self.etat == "chargee":
+            self.depart = self.joueur.position + 18
+            self.hauteur = self.joueur.hauteur
+        else:
+            self.hauteur -= 4
+            self.image.set_alpha(255)
+            self.etat = "tiree"
+            if self.hauteur < 0:
+                self.etat = "chargee"
+                self.hauteur = self.joueur.hauteur
+                self.image.set_alpha(0)
+
+    def toucher(self, ennemi):
+        if (
+            self.etat == "tiree"
+            and ennemi.depart - 32 <= self.depart <= ennemi.depart + ennemi.image.get_width()
+            and ennemi.hauteur <= self.hauteur <= ennemi.hauteur + ennemi.image.get_height()
+        ):
+            self.etat = "chargee"
+            print("touché")
+            self.hauteur = self.joueur.hauteur
+            self.image.set_alpha(0)
+            return True
+
+        return False
+
+class Balle_B:
+
+    def __init__(self, joueur, etat="chargee"):
+        self.joueur = joueur
+        self.depart = self.joueur.position + 19
+        self.hauteur = joueur.hauteur
+        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/player/Missile_B_Small.png").convert_alpha(), (32, 32))
         self.etat = etat
         self.image.set_alpha(0)
 

@@ -13,13 +13,20 @@ player = space.Joueur()
 score_precedent = player.score
 vg_precedente = 0
 sc = space.Nombre(player.score, 50)
-balle = space.Balle(player)
+balles=[]
+for i in range(2):
+    balle = space.Balle_A(player)
+    balles.append(balle)
 
 with open("fichiers/sauvegardes/save.json", "r") as fichier:
     donnees = json.load(fichier)
     print(donnees)
 sc_save_last = space.Nombre(donnees["score"], 50)
 sc_save_best = space.Nombre(donnees["best"], 50)
+
+image_missile=pygame.image.load("fichiers/images/player/Missile_A_Small.png").convert_alpha()
+image_missile2=pygame.image.load("fichiers/images/player/Missile_A_Small.png").convert_alpha()
+image_missile2.set_alpha(100)
 
 listeTextes = [
     pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/score.png").convert_alpha(), (200, 200)),
@@ -81,13 +88,16 @@ while running:
             if event.key == pygame.K_DOWN:
                 player.sens = "bas"
             if event.key == pygame.K_SPACE:
-                balle.etat = "tiree"
+                for balle in balles:
+                    if balle.etat=="chargee":
+                        balle.etat="tiree"
+                        break
         if event.type == pygame.KEYUP:
             player.sens = 0
 
     if len(listeEnnemis) > 0:
         for ennemi in listeEnnemis:
-            if balle.toucher(ennemi):
+            if balles[0].toucher(ennemi) or balles[1].toucher(ennemi):
                 son = pygame.mixer.Sound("fichiers/sons/explosion.wav")
                 son.play()
                 ennemi.mort = True
@@ -102,8 +112,6 @@ while running:
                 player.vie -= 1
                 if player.vie <= 0:
                     running = False
-        if balle.hauteur < 0:
-            balle.hauteur = player.hauteur
     else:
         vague_passee.play()
         space.Ennemi.vague += 1
@@ -114,7 +122,10 @@ while running:
         f.avancer()
         screen.blit(f.image, [f.largeur, f.hauteur])
     player.deplacer()
-    balle.bouger()
+    for balle in balles:
+        balle.bouger()
+        if balle.hauteur < 0:
+            balle.hauteur=player.hauteur
 
     screen.blit(listeTextes[1], [0, 955])
     if vg_precedente != space.Ennemi.vague:
@@ -142,7 +153,8 @@ while running:
     for i in range(len(sc_save_best.images)):
         screen.blit(sc_save_best.images[i], [(1920 - (len(sc_save_best.images) * 35) + (i * 35)), 1030])
 
-    screen.blit(balle.image, [balle.depart, balle.hauteur])
+    screen.blit(balles[0].image, [balles[0].depart, balles[0].hauteur])
+    screen.blit(balles[1].image, [balles[1].depart, balles[1].hauteur])
     screen.blit(player.image, [player.position, player.hauteur])
 
     for extra in listeEnnemis:
@@ -151,6 +163,16 @@ while running:
 
     if sc_save_best.nb < player.score:
         sc_save_best = space.Nombre(player.score, 50)
+
+    if balles[0].etat=="chargee" and balles[1].etat=="chargee":
+        screen.blit(image_missile,[896,1016])
+        screen.blit(image_missile,[960,1016])
+    elif (balles[0].etat=="chargee" and balles[1].etat=="tiree") or (balles[1].etat=="chargee" and balles[0].etat=="tiree"):
+        screen.blit(image_missile,[896,1016])
+        screen.blit(image_missile2,[960,1016])
+    else:
+        screen.blit(image_missile2,[896,1016])
+        screen.blit(image_missile2,[960,1016]) 
 
     score_precedent = player.score
     pygame.display.update()

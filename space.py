@@ -12,7 +12,7 @@ class Joueur:
                  hauteur=870,
                  vie=3):
         self.sens = sens
-        self.image = pygame.image.load("fichiers/images/Ship_1_A_Small.png").convert_alpha()
+        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/Ship_1_A_Small.png").convert_alpha(),(64,64))
         self.position = position
         self.vitesse = vitesse
         self.score = score
@@ -22,7 +22,7 @@ class Joueur:
     def deplacer(self):
         if self.sens=="gauche" and self.position>610:
             self.position-=self.vitesse
-        elif self.sens=="droite" and self.position<1182:
+        elif self.sens=="droite" and self.position<1246:
             self.position+=self.vitesse
         elif self.sens=="haut" and self.hauteur>840:
             self.hauteur-=self.vitesse
@@ -42,7 +42,7 @@ class Balle:
         self.joueur = joueur
         self.depart = self.joueur.position + 19
         self.hauteur = joueur.hauteur
-        self.image = pygame.image.load("fichiers/images/Missile_A_Small.png").convert_alpha()
+        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/Missile_A_Small.png").convert_alpha(),(32,32))
         self.etat = etat
         self.image.set_alpha(0)
 
@@ -62,7 +62,7 @@ class Balle:
     def toucher(self, ennemi):
         if (
             self.etat == "tiree"
-            and ennemi.depart - 64 <= self.depart <= ennemi.depart + ennemi.image.get_width()
+            and ennemi.depart - 32 <= self.depart <= ennemi.depart + ennemi.image.get_width()
             and ennemi.hauteur <= self.hauteur <= ennemi.hauteur + ennemi.image.get_height()
         ):
             self.etat = "chargee"
@@ -76,8 +76,9 @@ class Balle:
 
 
 class Ennemi:
+    
     vague=0
-    vagues=[1,2,4,8,15]
+    vagues=[i for i in range(100)]
     NbEnnemis=vagues[vague]
     types={1:["invader1",
               "fichiers/images/Enemy_1_A_Small.png",
@@ -85,18 +86,27 @@ class Ennemi:
               2:["invader2",
                  "fichiers/images/Enemy_2_A_Small.png",
                  2.2]}
-
-    def __init__(self,
-                 types=types):
-        self.depart=r.randint(610,1182)
+    def __init__(self,types=types,mort=False):
+        self.depart=r.randint(610,1246)
         self.type=types[r.randint(1,2)]
-        image=pygame.image.load(self.type[1]).convert_alpha()
-        self.image=image
+        image=pygame.transform.smoothscale(pygame.image.load(self.type[1]).convert_alpha(),(64,64))
         self.vitesse=self.type[2]
-        self.hauteur=r.randint(-500,-100)
+        self.image=image
+        self.alpha=255
+        self.hauteur=r.randint(-500,-70)
+        self.mort=mort
 
     def avancer(self):
         self.hauteur+=self.vitesse
+    
+    def explosion(self):
+        if self.mort:
+            self.vitesse=0
+            self.alpha-=10
+            print(self.alpha)
+            self.image.set_alpha(self.alpha)
+
+
 
 
 class Fond:

@@ -1,6 +1,7 @@
 import pygame
 import space
 import sys
+import random as r
 
 pygame.init()
 
@@ -9,6 +10,14 @@ pygame.display.set_caption("Space Invaders")
 
 player = space.Joueur()
 balle = space.Balle(player)
+
+listeMusiques=["fichiers/musique/musique_1.mp3",
+               "fichiers/musique/musique_2.mp3",
+               "fichiers/musique/musique_3.mp3",
+               "fichiers/musique/musique_4.mp3",
+               "fichiers/musique/musique_5.mp3"]
+
+vague_passee=pygame.mixer.Sound("fichiers/sons/vague_passee.wav")
 
 listeFond=[]
 for i in range(3):
@@ -34,6 +43,11 @@ screen.fill((0, 0, 0))
 running = True
 
 while running:
+    if not pygame.mixer.music.get_busy():
+        musique=r.choice(listeMusiques)
+        pygame.mixer.music.load(musique)
+        pygame.mixer.music.play()
+        pygame.mixer.music.set_volume(0.3)
     screen.fill((0, 0, 0))
 
     for event in pygame.event.get():
@@ -58,8 +72,15 @@ while running:
     if len(listeEnnemis) > 0:
         for ennemi in listeEnnemis:
             if balle.toucher(ennemi):
-                listeEnnemis.remove(ennemi)
-                player.marquer()
+                son=pygame.mixer.Sound("fichiers/sons/explosion.wav")
+                son.play()
+                ennemi.mort=True
+                ennemi.explosion()
+            elif ennemi.mort:
+                ennemi.explosion()
+                if ennemi.alpha==0:
+                    listeEnnemis.remove(ennemi)
+                    player.marquer()
             elif ennemi.hauteur > 1080:
                 listeEnnemis.remove(ennemi)
                 player.vie -= 1
@@ -70,6 +91,7 @@ while running:
         if balle.hauteur < 0:
             balle.hauteur = player.hauteur
     else:
+        vague_passee.play()
         space.Ennemi.vague += 1
         space.Ennemi.NbEnnemis = space.Ennemi.vagues[space.Ennemi.vague]
         print("vague:", space.Ennemi.vague + 1)

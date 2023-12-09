@@ -102,7 +102,7 @@ class Ennemi:
     def explosion(self):
         if self.mort:
             self.vitesse=0
-            self.alpha-=30
+            self.alpha-=45
             print(self.alpha)
             self.image.set_alpha(self.alpha)
 

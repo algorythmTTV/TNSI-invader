@@ -2,6 +2,7 @@ import pygame
 import space
 import sys
 import random as r
+import json
 
 pygame.init()
 
@@ -14,6 +15,16 @@ vg_precedente=0
 sc=space.Nombre(player.score,50)
 balle = space.Balle(player)
 
+with open("fichiers/sauvegardes/save.json","r") as fichier:
+    donnees=json.load(fichier)
+    print(donnees)
+sc_save_last=space.Nombre(donnees["score"],50)
+sc_save_best=space.Nombre(donnees["best"],50)
+
+listeTextes=[pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/score.png").convert_alpha(),(200,200)),
+             pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/vague.png").convert_alpha(),(200,200)),
+             pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/last.png").convert_alpha(),(200,200)),
+             pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/best.png").convert_alpha(),(200,200))]
 
 listeMusiques=["fichiers/musique/musique_1.mp3",
                "fichiers/musique/musique_2.mp3",
@@ -111,21 +122,31 @@ while running:
     player.deplacer()
     balle.bouger()
 
+    screen.blit(listeTextes[1],[0,955])
     if vg_precedente!=space.Ennemi.vague:
         vg=space.Nombre(space.Ennemi.vague,50)
         for i in range(len(vg.images)):
-            screen.blit(vg.images[i],[i*50,1030])
+            screen.blit(vg.images[i],[(i+5)*35,1030])
     else:
         for i in range(vg.images):
-            screen.blit(vg.images[i],[i*50,1030])
+            screen.blit(vg.images[i],[(i+5)*35,1030])
 
+    screen.blit(listeTextes[0],[0,-75])
     if score_precedent!=player.score:
         sc=space.Nombre(player.score,50)
         for i in range(len(sc.images)):
-            screen.blit(sc.images[i],[i*50,0])
+            screen.blit(sc.images[i],[(i+5)*35,0])
     else:
         for i in range(len(sc.images)):
-            screen.blit(sc.images[i],[i*50,0])
+            screen.blit(sc.images[i],[(i+5)*35,0])
+    
+    screen.blit(listeTextes[2],[1920-(len(sc_save_last.images)*35)-150,-75])
+    for i in range(len(sc_save_last.images)):
+        screen.blit(sc_save_last.images[i],[(1920-(len(sc_save_last.images)*35)+(i*35)),0])
+
+    screen.blit(listeTextes[3],[1920-(len(sc_save_best.images)*35)-150,955])
+    for i in range(len(sc_save_best.images)):
+        screen.blit(sc_save_best.images[i],[(1920-(len(sc_save_best.images)*35)+(i*35)),1030])
 
     screen.blit(balle.image, [balle.depart, balle.hauteur])
     screen.blit(player.image, [player.position, player.hauteur])
@@ -134,6 +155,9 @@ while running:
         extra.avancer()
         screen.blit(extra.image, [extra.depart, round(extra.hauteur)])
     
+    if sc_save_best.nb<player.score:
+        sc_save_best=space.Nombre(player.score,50)
+
     # for i in range((space.Ennemi.vague+1)):
     #     obst=space.Obstacle()
     #     listeObstacles.append(obst)
@@ -148,6 +172,11 @@ while running:
 
     score_precedent=player.score
     pygame.display.update()
+
+
+save_last={"score":player.score,"best":sc_save_best.nb}
+with open("fichiers/sauvegardes/save.json","w") as fichier:
+    json.dump(save_last,fichier)
 
 
 pygame.mixer.music.stop()

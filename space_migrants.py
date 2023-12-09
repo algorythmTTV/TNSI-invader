@@ -9,7 +9,10 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Space Invaders")
 
 player = space.Joueur()
+score_precedent=player.score
+sc=space.Nombre(player.score,50)
 balle = space.Balle(player)
+
 
 listeMusiques=["fichiers/musique/musique_1.mp3",
                "fichiers/musique/musique_2.mp3",
@@ -85,9 +88,7 @@ while running:
                 listeEnnemis.remove(ennemi)
                 player.vie -= 1
                 if player.vie <= 0:
-                    print("Perdu!")
-                    running = False
-                    sys.exit()
+                    running=False
         if balle.hauteur < 0:
             balle.hauteur = player.hauteur
     else:
@@ -105,7 +106,13 @@ while running:
     player.deplacer()
     balle.bouger()
 
-    
+    if score_precedent!=player.score:
+        sc=space.Nombre(player.score,50)
+        for i in range(len(sc.images)):
+            screen.blit(sc.images[i],[i*50,0])
+    else:
+        for i in range(len(sc.images)):
+            screen.blit(sc.images[i],[i*50,0])
 
     screen.blit(balle.image, [balle.depart, balle.hauteur])
     screen.blit(player.image, [player.position, player.hauteur])
@@ -113,5 +120,14 @@ while running:
     for extra in listeEnnemis:
         extra.avancer()
         screen.blit(extra.image, [extra.depart, round(extra.hauteur)])
-
+    score_precedent=player.score
     pygame.display.update()
+
+fin=pygame.image.load("fichiers/fond/fin.png").convert_alpha()
+screen.blit(fin, [0,0])
+pygame.display.update()
+exit = False
+while not exit:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            exit = True

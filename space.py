@@ -118,8 +118,8 @@ class Fond:
 
     def __init__(self, num, hauteur=-10440, largeur=600):
         layer_info = self.layers[num]
-        image_path = layer_info["image"]
-        self.image = pygame.image.load(image_path).convert_alpha()
+        chemin = layer_info["image"]
+        self.image = pygame.image.load(chemin).convert_alpha()
         self.image = pygame.transform.rotozoom(self.image, 0, 2)
         self.vitesse = layer_info["vitesse"]
         self.hauteur = hauteur
@@ -132,7 +132,26 @@ class Fond:
             self.hauteur += self.vitesse
 
 
+class Nombre:
+    nombres={"0":pygame.image.load("fichiers/images/nombres/0.png"),
+             "1":pygame.image.load("fichiers/images/nombres/1.png"),
+             "2":pygame.image.load("fichiers/images/nombres/2.png"),
+             "3":pygame.image.load("fichiers/images/nombres/3.png"),
+             "4":pygame.image.load("fichiers/images/nombres/4.png"),
+             "5":pygame.image.load("fichiers/images/nombres/5.png"),
+             "6":pygame.image.load("fichiers/images/nombres/6.png"),
+             "7":pygame.image.load("fichiers/images/nombres/7.png"),
+             "8":pygame.image.load("fichiers/images/nombres/8.png"),
+             "9":pygame.image.load("fichiers/images/nombres/9.png")}
+    
+    def __init__(self,nb,taille,nombres=nombres):
+        self.nb=nb
+        self.images=[]
+        for chiffre in str(nb):
+            self.images.append(pygame.transform.smoothscale(nombres[chiffre].convert_alpha(),(taille,taille)))
+    
 
+    
 
 class Obstacle:
     def __init__():

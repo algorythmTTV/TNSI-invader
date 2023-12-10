@@ -6,6 +6,9 @@ import json
 
 pygame.init()
 
+clock = pygame.time.Clock()
+FPS = 60
+
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Space Invaders")
 
@@ -18,9 +21,12 @@ for i in range(2):
     balle = space.Balle_A(player)
     balles.append(balle)
 
+cheat={"noel":{"n":False,"o":False,"e":False,"l":False,"active":False}}
+
+image_noel=pygame.image.load("fichiers/images/enemies/santa.png").convert_alpha()
+
 with open("fichiers/sauvegardes/save.json", "r") as fichier:
     donnees = json.load(fichier)
-    print(donnees)
 sc_save_last = space.Nombre(donnees["score"], 50)
 sc_save_best = space.Nombre(donnees["best"], 50)
 
@@ -68,6 +74,7 @@ screen.fill((0, 0, 0))
 running = True
 
 while running:
+    clock.tick(FPS)
     if not pygame.mixer.music.get_busy():
         musique = r.choice(listeMusiques)
         pygame.mixer.music.load(musique)
@@ -81,6 +88,27 @@ while running:
             sys.exit()
 
         if event.type == pygame.KEYDOWN:
+            if not cheat["noel"]["active"]:
+                if event.key == pygame.K_n:
+                    for i in cheat["noel"].keys():
+                        cheat["noel"][i]=False
+                    cheat["noel"]["n"]=True
+                if (event.key == pygame.K_o 
+                    and cheat["noel"]["n"]
+                    ):
+                    cheat["noel"]["o"]=True
+                if (event.key == pygame.K_o 
+                    and cheat["noel"]["n"]
+                    and cheat["noel"]["o"]
+                    ):
+                    cheat["noel"]["e"]=True
+                if (event.key == pygame.K_o 
+                    and cheat["noel"]["n"]
+                    and cheat["noel"]["o"]
+                    and cheat["noel"]["e"]
+                    ):
+                    cheat["noel"]["l"]=True
+                    cheat["noel"]["active"]=True
             if event.key == pygame.K_LEFT:
                 player.sens = "gauche"
             if event.key == pygame.K_RIGHT:
@@ -112,6 +140,8 @@ while running:
 
     if len(listeEnnemis) > 0:
         for ennemi in listeEnnemis:
+            if cheat["noel"]["active"]:
+                ennemi.changer_image(image_noel)
             if balles[0].toucher(ennemi) or balles[1].toucher(ennemi):
                 son = pygame.mixer.Sound("fichiers/sons/explosion.wav")
                 son.play()
@@ -131,12 +161,14 @@ while running:
         vague_passee.play()
         space.Ennemi.vague += 1
         space.Ennemi.NbEnnemis = space.Ennemi.vagues[space.Ennemi.vague]
-        listeEnnemis.extend([space.Ennemi() for _ in range(space.Ennemi.NbEnnemis)])
+        listeEnnemis=[space.Ennemi() for i in range(space.Ennemi.NbEnnemis)]
 
     for f in listeFond:
         f.avancer()
         screen.blit(f.image, [f.largeur, f.hauteur])
+    
     player.deplacer()
+    
     for balle in balles:
         balle.bouger()
         if balle.hauteur < 0:

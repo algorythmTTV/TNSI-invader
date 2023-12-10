@@ -106,20 +106,34 @@ class Ennemi:
     vague = 0
     vagues = [i for i in range(100)]
     NbEnnemis = vagues[vague]
+    code = ""
     types = {
-        1: ["invader1", "fichiers/images/enemies/Enemy_1_A_Small.png", 1.5],
-        2: ["invader2", "fichiers/images/enemies/Enemy_2_A_Small.png", 2.2]
+        1: ["invader1", pygame.image.load("fichiers/images/enemies/Enemy_1_A_Small.png"), 1.5],
+        2: ["invader2", pygame.image.load("fichiers/images/enemies/Enemy_2_A_Small.png"), 2.2],
+        3: ["santa", pygame.image.load("fichiers/images/enemies/santa.png"), 2]
     }
 
-    def __init__(self, types=types, mort=False):
+    def __init__(self, mort=False):
         self.depart = r.randint(610, 1246)
-        self.type = types[r.randint(1, 2)]
-        image = pygame.transform.smoothscale(pygame.image.load(self.type[1]).convert_alpha(), (64, 64))
-        self.vitesse = self.type[2]
-        self.image = image
+        self.code = ""
+        self.type = None
+        self.vitesse = 0
+        self.image = None
         self.alpha = 255
         self.hauteur = r.randint(-500, -70)
         self.mort = mort
+        self.initialiser_type()
+
+    def initialiser_type(self):
+        if self.code == "noel":
+            self.type = self.types[3]
+        else:
+            self.type = self.types[r.randint(1, 2)]
+        self.image = pygame.transform.smoothscale(self.type[1].convert_alpha(), (64, 64))
+        self.vitesse = self.type[2]
+
+    def changer_image(self, nouvelle_image):
+        self.image = pygame.transform.smoothscale(nouvelle_image, (64, 64))
 
     def avancer(self):
         self.hauteur += self.vitesse
@@ -128,8 +142,8 @@ class Ennemi:
         if self.mort:
             self.vitesse = 0
             self.alpha -= 45
-            print(self.alpha)
             self.image.set_alpha(self.alpha)
+
 
 
 class Fond:

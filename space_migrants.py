@@ -49,6 +49,8 @@ listeFond = [space.Fond(i) for i in range(3)]
 
 listeEnnemis = [space.Ennemi() for _ in range(space.Ennemi.NbEnnemis)]
 
+pause = pygame.image.load("fichiers/fond/pause.png").convert_alpha()
+
 fond_menu = pygame.image.load("fichiers/fond/fond.png").convert_alpha()
 screen.blit(fond_menu, [0, 0])
 pygame.display.update()
@@ -93,9 +95,18 @@ while running:
                         balle.etat="tiree"
                         break
             if event.key == pygame.K_ESCAPE:
+                screen.blit(pause, [600, 0])
+                pygame.display.update()
                 resume=False
                 while not resume:
-                    pygame.draw.rect(screen,(255,255,255),pygame.Rect(600,0,720,1080))
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_ESCAPE:
+                                running = False
+                                sys.exit()
+                            if event.key == pygame.K_SPACE:
+                                resume=True
+                    
         if event.type == pygame.KEYUP:
             player.sens = 0
 
@@ -131,15 +142,6 @@ while running:
         if balle.hauteur < 0:
             balle.hauteur=player.hauteur
 
-    screen.blit(listeTextes[1], [0, 955])
-    if vg_precedente != space.Ennemi.vague:
-        vg = space.Nombre(space.Ennemi.vague, 50)
-        for i in range(len(vg.images)):
-            screen.blit(vg.images[i], [(i + 5) * 35, 1030])
-    else:
-        for i in range(vg.images):
-            screen.blit(vg.images[i], [(i + 5) * 35, 1030])
-
     screen.blit(listeTextes[0], [0, -75])
     if score_precedent != player.score:
         sc = space.Nombre(player.score, 50)
@@ -148,6 +150,15 @@ while running:
     else:
         for i in range(len(sc.images)):
             screen.blit(sc.images[i], [(i + 5) * 35, 0])
+
+    screen.blit(listeTextes[1], [0, 955])
+    if vg_precedente != space.Ennemi.vague:
+        vg = space.Nombre(space.Ennemi.vague, 50)
+        for i in range(len(vg.images)):
+            screen.blit(vg.images[i], [(i + 5) * 35, 1030])
+    else:
+        for i in range(vg.images):
+            screen.blit(vg.images[i], [(i + 5) * 35, 1030])
 
     screen.blit(listeTextes[2], [1920 - (len(sc_save_last.images) * 35) - 150, -75])
     for i in range(len(sc_save_last.images)):

@@ -92,6 +92,10 @@ while running:
                     if balle.etat=="chargee":
                         balle.etat="tiree"
                         break
+            if event.key == pygame.K_ESCAPE:
+                resume=False
+                while not resume:
+                    pygame.draw.rect(screen,(255,255,255),pygame.Rect(600,0,720,1080))
         if event.type == pygame.KEYUP:
             player.sens = 0
 

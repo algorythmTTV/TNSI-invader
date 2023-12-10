@@ -172,6 +172,9 @@ while running:
     screen.blit(balles[1].image, [balles[1].depart, balles[1].hauteur])
     screen.blit(player.image, [player.position, player.hauteur])
 
+    for i in range(player.vie):
+        screen.blit(player.image, [i*64, 926])
+
     for extra in listeEnnemis:
         extra.avancer()
         screen.blit(extra.image, [extra.depart, round(extra.hauteur)])

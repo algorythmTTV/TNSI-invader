@@ -3,9 +3,9 @@ import random as r
 
 
 class Joueur:
-    def __init__(self, sens=0, position=896, vitesse=4, score=0, hauteur=870, vie=1):
+    def __init__(self, sens=0, position=896, vitesse=4, score=0, hauteur=870, vie=3):
         self.sens = sens
-        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/player/Ship_1_A_Small.png").convert_alpha(), (128, 128))
+        self.image = pygame.transform.smoothscale(pygame.image.load("fichiers/images/player/Ship_1_A_Small.png").convert_alpha(), (64, 64))
         self.position = position
         self.vitesse = vitesse
         self.score = score
@@ -174,3 +174,4 @@ class Nombre:
         self.images = []
         for chiffre in str(nb):
             self.images.append(pygame.transform.smoothscale(nombres[chiffre].convert_alpha(), (taille, taille)))
+

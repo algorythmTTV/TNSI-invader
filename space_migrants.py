@@ -3,6 +3,11 @@ import space
 import sys
 import random as r
 import json
+import ctypes
+
+user32 = ctypes.windll.user32
+screen_width=user32.GetSystemMetrics(0)
+screen_height=user32.GetSystemMetrics(1)
 
 pygame.init()
 
@@ -35,10 +40,10 @@ image_missile2=pygame.image.load("fichiers/images/player/Missile_A_Small.png").c
 image_missile2.set_alpha(100)
 
 listeTextes = [
-    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/score.png").convert_alpha(), (200, 200)),
-    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/vague.png").convert_alpha(), (200, 200)),
-    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/last.png").convert_alpha(), (200, 200)),
-    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/best.png").convert_alpha(), (200, 200))
+    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/score.png").convert_alpha(), (screen_width//9.6, screen_height//5.4)),
+    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/vague.png").convert_alpha(), (screen_width//9.6, screen_height//5.4)),
+    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/last.png").convert_alpha(), (screen_width//9.6, screen_height//5.4)),
+    pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/best.png").convert_alpha(), (screen_width//9.6, screen_height//5.4))
 ]
 
 listeMusiques = [
@@ -151,13 +156,13 @@ while running:
                 if ennemi.alpha <= 0:
                     listeEnnemis.remove(ennemi)
                     player.marquer()
-            elif ennemi.hauteur > 1080:
+            elif ennemi.hauteur > screen_height:
                 listeEnnemis.remove(ennemi)
                 player.vie -= 1
                 if player.vie <= 0:
                     running = False
     else:
-        vague_passee.play()
+        # vague_passee.play()
         space.Ennemi.vague += 1
         space.Ennemi.NbEnnemis = space.Ennemi.vagues[space.Ennemi.vague]
         listeEnnemis=[space.Ennemi() for i in range(space.Ennemi.NbEnnemis)]
@@ -173,29 +178,29 @@ while running:
         if balle.hauteur < 0:
             balle.hauteur=player.hauteur
 
-    screen.blit(listeTextes[0], [0, -75])
+    screen.blit(listeTextes[0], [0, -(screen_height//14.4)])
     if score_precedent != player.score:
-        sc = space.Nombre(player.score, 50)
+        sc = space.Nombre(player.score, screen_width//38.4)
         for i in range(len(sc.images)):
-            screen.blit(sc.images[i], [(i + 5) * 35, 0])
+            screen.blit(sc.images[i], [(i + 5) * (screen_width//60), 0])
     else:
         for i in range(len(sc.images)):
-            screen.blit(sc.images[i], [(i + 5) * 35, 0])
+            screen.blit(sc.images[i], [(i + 5) * (screen_width//60), 0])
 
-    screen.blit(listeTextes[1], [0, 955])
+    screen.blit(listeTextes[1], [0, screen_width//2])
     if vg_precedente != space.Ennemi.vague:
-        vg = space.Nombre(space.Ennemi.vague, 50)
+        vg = space.Nombre(space.Ennemi.vague, screen_width//38.4)
         for i in range(len(vg.images)):
-            screen.blit(vg.images[i], [(i + 5) * 35, 1030])
+            screen.blit(vg.images[i], [(i + 5) * (screen_width//60), screen_height-((screen_height//38.4))])
     else:
         for i in range(vg.images):
-            screen.blit(vg.images[i], [(i + 5) * 35, 1030])
+            screen.blit(vg.images[i], [(i + 5) * (screen_width//60), screen_height-((screen_height//38.4))])
 
-    screen.blit(listeTextes[2], [1920 - (len(sc_save_last.images) * 35) - 150, -75])
+    screen.blit(listeTextes[2], [1920 - (len(sc_save_last.images) * 35) - 150, -(screen_height//14.4)])
     for i in range(len(sc_save_last.images)):
         screen.blit(sc_save_last.images[i], [(1920 - (len(sc_save_last.images) * 35) + (i * 35)), 0])
 
-    screen.blit(listeTextes[3], [1920 - (len(sc_save_best.images) * 35) - 150, 955])
+    screen.blit(listeTextes[3], [1920 - (len(sc_save_best.images) * 35) - 150, screen_width//2])
     for i in range(len(sc_save_best.images)):
         screen.blit(sc_save_best.images[i], [(1920 - (len(sc_save_best.images) * 35) + (i * 35)), 1030])
 

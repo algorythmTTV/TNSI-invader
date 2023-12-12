@@ -49,7 +49,7 @@ listeMusiques = [
     "fichiers/musique/musique_5.mp3"
 ]
 
-vague_passee = pygame.mixer.Sound("fichiers/sons/vague_passee.wav")
+# vague_passee = pygame.mixer.Sound("fichiers/sons/vague_passee.wav")
 
 listeFond = [space.Fond(i) for i in range(3)]
 
@@ -60,26 +60,25 @@ pause = pygame.image.load("fichiers/fond/pause.png").convert_alpha()
 fond_menu = pygame.image.load("fichiers/fond/fond.png").convert_alpha()
 screen.blit(fond_menu, [0, 0])
 pygame.display.update()
-son = pygame.mixer.Sound("fichiers/sons/start.wav")
-son.play()
+# son = pygame.mixer.Sound("fichiers/sons/start.wav")
+# son.play()
 commence = False
 while not commence:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             commence = True
-            son = pygame.mixer.Sound("fichiers/sons/shoot.wav")
-            son.play()
+            # son = pygame.mixer.Sound("fichiers/sons/shoot.wav")
+            # son.play()
 screen.fill((0, 0, 0))
 
 running = True
 
 while running:
-    clock.tick(FPS)
-    if not pygame.mixer.music.get_busy():
-        musique = r.choice(listeMusiques)
-        pygame.mixer.music.load(musique)
-        pygame.mixer.music.play()
-        pygame.mixer.music.set_volume(0.3)
+    # if not pygame.mixer.music.get_busy():
+    #     musique = r.choice(listeMusiques)
+    #     pygame.mixer.music.load(musique)
+    #     pygame.mixer.music.play()
+    #     pygame.mixer.music.set_volume(0.3)
     screen.fill((0, 0, 0))
 
     for event in pygame.event.get():
@@ -143,8 +142,8 @@ while running:
             if cheat["noel"]["active"]:
                 ennemi.changer_image(image_noel)
             if balles[0].toucher(ennemi) or balles[1].toucher(ennemi):
-                son = pygame.mixer.Sound("fichiers/sons/explosion.wav")
-                son.play()
+                # son = pygame.mixer.Sound("fichiers/sons/explosion.wav")
+                # son.play()
                 ennemi.mort = True
                 ennemi.explosion()
             elif ennemi.mort:
@@ -226,17 +225,18 @@ while running:
 
     score_precedent = player.score
     pygame.display.update()
+    clock.tick(FPS)
 
 save_last = {"score": player.score, "best": sc_save_best.nb}
 with open("fichiers/sauvegardes/save.json", "w") as fichier:
     json.dump(save_last, fichier)
 
-pygame.mixer.music.stop()
-son = pygame.mixer.Sound("fichiers/sons/game_over.wav")
-son.set_volume(0.2)
-son.play()
-son = pygame.mixer.Sound("fichiers/sons/dead.wav")
-son.play()
+# pygame.mixer.music.stop()
+# son = pygame.mixer.Sound("fichiers/sons/game_over.wav")
+# son.set_volume(0.2)
+# son.play()
+# son = pygame.mixer.Sound("fichiers/sons/dead.wav")
+# son.play()
 fin = pygame.image.load("fichiers/fond/fin.png").convert_alpha()
 for i in range(256):
     fin.set_alpha(i)

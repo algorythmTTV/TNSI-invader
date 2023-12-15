@@ -191,18 +191,18 @@ while running:
     if vg_precedente != space.Ennemi.vague:
         vg = space.Nombre(space.Ennemi.vague, screen_width//38.4)
         for i in range(len(vg.images)):
-            screen.blit(vg.images[i], [(i + 5) * (screen_width//60), screen_height-((screen_height//38.4))])
+            screen.blit(vg.images[i], [(i + 5) * (screen_width//60), screen_height-((screen_height//21.6))])
     else:
         for i in range(vg.images):
-            screen.blit(vg.images[i], [(i + 5) * (screen_width//60), screen_height-((screen_height//38.4))])
+            screen.blit(vg.images[i], [(i + 5) * (screen_width//60), screen_height-((screen_height//21.6))])
 
-    screen.blit(listeTextes[2], [1920 - (len(sc_save_last.images) * 35) - 150, -(screen_height//14.4)])
+    screen.blit(listeTextes[2], [((screen_width - (len(sc_save_last.images) * (screen_width//60))) - (screen_width//38.4)), -(screen_height//14.4)])
     for i in range(len(sc_save_last.images)):
-        screen.blit(sc_save_last.images[i], [(1920 - (len(sc_save_last.images) * 35) + (i * 35)), 0])
+        screen.blit(sc_save_last.images[i], [(screen_width - (len(sc_save_last.images) * (screen_width//60)) + (i * (screen_width//60))), 0])
 
     screen.blit(listeTextes[3], [1920 - (len(sc_save_best.images) * 35) - 150, screen_width//2])
     for i in range(len(sc_save_best.images)):
-        screen.blit(sc_save_best.images[i], [(1920 - (len(sc_save_best.images) * 35) + (i * 35)), 1030])
+        screen.blit(sc_save_best.images[i], [(screen_width - (len(sc_save_best.images) * (screen_width//60)) + (i * (screen_width//60))), screen_height-((screen_height//21.6))])
 
     screen.blit(balles[0].image, [balles[0].depart, balles[0].hauteur])
     screen.blit(balles[1].image, [balles[1].depart, balles[1].hauteur])

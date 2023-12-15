@@ -1,3 +1,1 @@
-for i in range(1000,1100):
-    if len(str(1080/i))<6:
-        print(i)
+(1920 - (len(sc_save_best.images) * 35) + (i * 35))

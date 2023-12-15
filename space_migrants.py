@@ -218,6 +218,7 @@ while running:
     if sc_save_best.nb < player.score:
         sc_save_best = space.Nombre(player.score, 50)
 
+
     if balles[0].etat=="chargee" and balles[1].etat=="chargee":
         screen.blit(image_missile,[896,1016])
         screen.blit(image_missile,[960,1016])

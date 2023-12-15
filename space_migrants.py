@@ -196,7 +196,7 @@ while running:
         for i in range(vg.images):
             screen.blit(vg.images[i], [(i + 5) * (screen_width//60), screen_height-((screen_height//21.6))])
 
-    screen.blit(listeTextes[2], [((screen_width - (len(sc_save_last.images) * (screen_width//60))) - (screen_width//38.4)), -(screen_height//14.4)])
+    screen.blit(listeTextes[2], [screen_width - (len(sc_save_last.images) * (screen_width//60)) - (screen_width//9.6), -(screen_height//14.4)])
     for i in range(len(sc_save_last.images)):
         screen.blit(sc_save_last.images[i], [(screen_width - (len(sc_save_last.images) * (screen_width//60)) + (i * (screen_width//60))), 0])
 

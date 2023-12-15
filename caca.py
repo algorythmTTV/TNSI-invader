@@ -1,1 +1,1 @@
-(1920 - (len(sc_save_best.images) * 35) + (i * 35))
+1920 - (len(sc_save_best.images) * 35) - 150

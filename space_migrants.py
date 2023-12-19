@@ -1,9 +1,16 @@
+# Importation des librairies
+
 import pygame
 import space
 import sys
 import random as r
 import json
 import ctypes
+
+# Importation des variables
+from  musique import listeMusiques, fin
+
+# Sauvegarde des specs de l'écran
 
 user32 = ctypes.windll.user32
 screen_width=user32.GetSystemMetrics(0)
@@ -46,15 +53,7 @@ listeTextes = [
     pygame.transform.smoothscale(pygame.image.load("fichiers/images/text/best.png").convert_alpha(), (screen_width//9.6, screen_height//5.4))
 ]
 
-listeMusiques = [
-    "fichiers/musique/musique_1.mp3",
-    "fichiers/musique/musique_2.mp3",
-    "fichiers/musique/musique_3.mp3",
-    "fichiers/musique/musique_4.mp3",
-    "fichiers/musique/musique_5.mp3"
-]
-
-vague_passee = pygame.mixer.Sound("fichiers/sons/vague_passee.wav")
+# vague_passee = pygame.mixer.Sound("fichiers/sons/vague_passee.wav")
 
 listeFond = [space.Fond(i) for i in range(3)]
 
@@ -65,8 +64,8 @@ pause = pygame.image.load("fichiers/fond/pause.png").convert_alpha()
 fond_menu = pygame.image.load("fichiers/fond/fond.png").convert_alpha()
 screen.blit(fond_menu, [0, 0])
 pygame.display.update()
-son = pygame.mixer.Sound("fichiers/sons/start.wav")
-son.play()
+# son = pygame.mixer.Sound("fichiers/sons/start.wav")
+# son.play()
 commence = False
 while not commence:
     for event in pygame.event.get():
@@ -79,11 +78,11 @@ screen.fill((0, 0, 0))
 running = True
 
 while running:
-    if not pygame.mixer.music.get_busy():
-        musique = r.choice(listeMusiques)
-        pygame.mixer.music.load(musique)
-        pygame.mixer.music.play()
-        pygame.mixer.music.set_volume(0.3)
+    # if not pygame.mixer.music.get_busy():
+    #     musique = r.choice(listeMusiques)
+    #     pygame.mixer.music.load(musique)
+    #     pygame.mixer.music.play()
+    #     pygame.mixer.music.set_volume(0.3)
     screen.fill((0, 0, 0))
 
     for event in pygame.event.get():
@@ -147,8 +146,8 @@ while running:
             if cheat["noel"]["active"]:
                 ennemi.changer_image(image_noel)
             if balles[0].toucher(ennemi) or balles[1].toucher(ennemi):
-                son = pygame.mixer.Sound("fichiers/sons/explosion.wav")
-                son.play()
+                # son = pygame.mixer.Sound("fichiers/sons/explosion.wav")
+                # son.play()
                 ennemi.mort = True
                 ennemi.explosion()
             elif ennemi.mort:
@@ -162,7 +161,7 @@ while running:
                 if player.vie <= 0:
                     running = False
     else:
-        vague_passee.play()
+        # vague_passee.play()
         space.Ennemi.vague += 1
         space.Ennemi.NbEnnemis = space.Ennemi.vagues[space.Ennemi.vague]
         listeEnnemis=[space.Ennemi() for i in range(space.Ennemi.NbEnnemis)]
@@ -237,12 +236,8 @@ save_last = {"score": player.score, "best": sc_save_best.nb}
 with open("fichiers/sauvegardes/save.json", "w") as fichier:
     json.dump(save_last, fichier)
 
-pygame.mixer.music.stop()
-son = pygame.mixer.Sound("fichiers/sons/game_over.wav")
-son.set_volume(0.2)
-son.play()
-son = pygame.mixer.Sound("fichiers/sons/dead.wav")
-son.play()
+# pygame.mixer.music.stop()
+# fin()
 fin = pygame.image.load("fichiers/fond/fin.png").convert_alpha()
 for i in range(256):
     fin.set_alpha(i)
